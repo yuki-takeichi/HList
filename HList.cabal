@@ -54,7 +54,8 @@ flag new_type_eq
                See <https://ghc.haskell.org/trac/ghc/ticket/9918>
 
 library
-  Build-Depends:       base >= 4.6 && < 4.12,
+  Build-Depends:       base == 4.12.0.0,
+                       --base >= 4.6 && < 4.12,
                        -- for Typeable '[] and '(:) with ghc-7.6
                        base-orphans,
                        -- Data.Semigroup for ghc < 8
