@@ -78,7 +78,18 @@ library
                        Data.HList.HOccurs,
                        Data.HList.HTypeIndexed,
                        Data.HList.HZip,
-                       Data.HList.TypeEqO
+                       Data.HList.TypeEqO,
+                       A16,
+                       Crow,
+                       Equations,
+                       Garapin,
+                       Lib,
+                       Monad,
+                       MontyHall,
+                       Operators,
+                       SilhoutteQuiz,
+                       Smoker,
+                       Utils
   Default-Language:    Haskell2010
 
 
