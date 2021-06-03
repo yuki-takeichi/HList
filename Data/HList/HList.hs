@@ -15,8 +15,6 @@ import Data.HList.HListPrelude
 import Text.ParserCombinators.ReadP
 import Data.List
 
-import LensDefs
-
 import Data.Array (Ix)
 import Data.Semigroup
 
@@ -842,9 +840,6 @@ Just H[1,'c']
 instance Applicative m => HSequence m '[] '[] where
     hSequence _ = pure HNil
 
-instance (m1 ~ m, Applicative m, HSequence m as bs) =>
-    HSequence m (m1 a ': as) (a ': bs) where
-    hSequence (HCons a b) = liftA2 HCons a (hSequence b)
 
 -- **** alternative implementation
 
@@ -1087,15 +1082,6 @@ instance HList2List (e' ': l) e
                                   <$> list2HListSuffix es
   list2HListSuffix [] = Nothing
 
--- | @Prism [s] [t] (HList s) (HList t)@
-listAsHList x = prism hList2List (\l -> case list2HListSuffix l of
-                                 Just (hl,[])  -> Right hl
-                                 _ -> Left []) x
-
--- | @Prism' [a] (HList s)@
---
--- where @s ~ HReplicateR n a@
-listAsHList' x = isSimple listAsHList x
 
 
 -- --------------------------------------------------------------------------
@@ -1243,24 +1229,6 @@ instance HSplit l => HSplit ((e,Proxy False) ': l)
     (l',l'') = hSplit l
 
 
-instance HSplit l => HSplit (Tagged True e ': l)
- where
-
-  type HSplitT (Tagged True e ': l) = e ': HSplitT l
-  type HSplitF (Tagged True e ': l) = HSplitF l
-
-  hSplit (HCons (Tagged e) l) = (HCons e l',l'')
-   where
-    (l',l'') = hSplit l
-
-instance HSplit l => HSplit (Tagged False e ': l)
- where
-  type HSplitT (Tagged False e ': l) = HSplitT l
-  type HSplitF (Tagged False e ': l) = e ': HSplitF l
-
-  hSplit (HCons (Tagged e) l) = (l',HCons e l'')
-   where
-    (l',l'') = hSplit l
 {-
 
 Let expansion makes a difference to Hugs:
@@ -1411,12 +1379,6 @@ class HTuple v t | v -> t, t -> v where
     -- | alternatively: @hUncurry (,,,)@
     hToTuple :: HList v -> t
     hFromTuple :: t -> HList v
-
--- | @Iso (HList v) (HList v') a b@
-hTuple x = iso hToTuple hFromTuple x
-
--- | @Iso' (HList v) a@
-hTuple' x = isSimple hTuple x
 
 instance HTuple '[] () where
     hToTuple HNil = ()

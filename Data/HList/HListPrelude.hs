@@ -95,9 +95,6 @@ class HUnzip r x y xy => HZip (r :: [*] -> *) x y xy where
   hZip :: r x -> r y -> r xy
 
 #if __GLASGOW_HASKELL__ != 706
-instance (lv ~ Tagged l v, HUnzip Proxy ls vs lvs)
-    => HUnzip Proxy (Label l ': ls) (v ': vs) (lv ': lvs) where
-    hUnzip _ = (Proxy, Proxy)
 
 instance HUnzip Proxy '[] '[] '[] where hUnzip _ = (Proxy, Proxy)
 

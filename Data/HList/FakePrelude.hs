@@ -12,12 +12,10 @@ module Data.HList.FakePrelude
     (module Data.HList.FakePrelude,
      -- * re-exports
      module Data.Proxy,
-     module Data.Tagged,
      Monoid(..),
      Any) where
 
 import Data.Proxy
-import Data.Tagged
 import GHC.Exts (Constraint,Any)
 import GHC.TypeLits
 #if __GLASGOW_HASKELL__ >= 800
@@ -357,11 +355,6 @@ instance (ApplyAB f (x,y) z,
           Applicative m) => ApplyAB (LiftA2 f) mxy mz where
     applyAB (LiftA2 f) xy = liftA2 (curry (applyAB f)) `uncurry` xy
 
-
--- | 'untag'
-data HUntag = HUntag
-instance (Tagged t x ~ tx) => ApplyAB HUntag tx x where
-    applyAB _ (Tagged x) = x
 
 
 -- --------------------------------------------------------------------------
@@ -805,25 +798,3 @@ instance SameLabels (x ': xs) '[]
 instance (SameLabels x y, SameLabels xs ys) =>
   SameLabels (x ': xs) (y ': ys)
 
-
-instance (Label t ~ Label t') => SameLabels (Label t) (Tagged t' a)
-instance (Label t ~ Label t') => SameLabels (Label t) (Label t')
-instance (Label t ~ Label t') => SameLabels (Label t) (t' :: Symbol)
-
-instance SameLabels (Label t) s => SameLabels (t :: Symbol) s
-instance SameLabels (Label t) s => SameLabels (Tagged t a) s
-
--- ** A list has only Tagged values
-
--- | The 'Record', 'Variant', 'TIP', 'TIC' type constructors only make
--- sense when they are applied to an instance of this class
-class HAllTaggedLV (ps :: [*])
-instance HAllTaggedLV '[]
-instance (HAllTaggedLV xs, x ~ Tagged t v) => HAllTaggedLV (x ': xs)
-
-
--- | see Data.HList.Record.'zipTagged'
-type family ZipTagged (ts :: [k]) (vs :: [*]) :: [*]
-type instance ZipTagged (Label t ': ts) (v ': vs) = Tagged t v ': ZipTagged ts vs
-type instance ZipTagged ((t :: Symbol) ': ts) (v ': vs) = Tagged t v ': ZipTagged ts vs
-type instance ZipTagged '[] '[] = '[]
