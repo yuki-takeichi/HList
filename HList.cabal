@@ -68,7 +68,8 @@ library
                        array
 
 
-  Exposed-modules:     Data.HList,
+  Exposed-modules:     Operators,
+                       Data.HList,
                        Data.HList.CommonMain,
                        Data.HList.FakePrelude,
                        Data.HList.HArray,
@@ -86,7 +87,6 @@ library
                        Lib,
                        Monad,
                        MontyHall,
-                       Operators,
                        SilhoutteQuiz,
                        Smoker,
                        Utils
