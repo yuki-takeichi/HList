@@ -1,2 +1,2 @@
 language = "haskell"
-run = "cabal repl"
+run = "cabal repl --ghc-options=\"-XTypeApplications -XDataKinds\""
